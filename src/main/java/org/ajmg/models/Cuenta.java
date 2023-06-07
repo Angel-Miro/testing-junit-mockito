@@ -1,5 +1,7 @@
 package org.ajmg.models;
 
+import org.ajmg.exceptions.SaldoInsuficienteException;
+
 import java.math.BigDecimal;
 
 public class Cuenta {
@@ -8,9 +10,12 @@ public class Cuenta {
 
     private boolean isActive;
 
-    public Cuenta(){}
+    public Cuenta(){
+        this.isActive = true;
+    }
 
     public Cuenta(String persona, BigDecimal cuenta){
+        this();
         this.persona = persona;
         this.cuenta = cuenta;
     }
@@ -37,5 +42,36 @@ public class Cuenta {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public void abonar (BigDecimal monto){
+        if(monto.doubleValue() != 0.0){
+            this.cuenta = this.cuenta.add(monto);
+        }
+    }
+
+    public void cargar(BigDecimal cargo) throws SaldoInsuficienteException {
+        if(cargo.doubleValue() != 0.0){
+            if(cargo.doubleValue() > this.cuenta.doubleValue()){
+                throw  new SaldoInsuficienteException("Saldo insuficiente");
+            } else {
+                this.cuenta = this.cuenta.subtract(cargo);
+            }
+        }
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if(!(obj instanceof Cuenta)){
+            return false;
+        }
+        Cuenta c = (Cuenta)obj;
+        if(c.getPersona() == null && c.getCuenta() == null){
+            return false;
+        }
+
+        return this.persona.equals(c.getPersona()) && this.cuenta.equals(c.getCuenta());
+
     }
 }
