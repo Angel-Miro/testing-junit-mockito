@@ -10,6 +10,8 @@ public class Cuenta {
 
     private boolean isActive;
 
+    private Banco banco;
+
     public Cuenta(){
         this.isActive = true;
     }
@@ -42,6 +44,14 @@ public class Cuenta {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public Banco getBanco() {
+        return banco;
+    }
+
+    public void setBanco(Banco banco) {
+        this.banco = banco;
     }
 
     public void abonar (BigDecimal monto){

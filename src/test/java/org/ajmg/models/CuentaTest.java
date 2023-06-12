@@ -82,4 +82,57 @@ class CuentaTest {
         // se aprovecha para validar el mensaje obtenido de la exception
         assertEquals(e.getMessage(), "Saldo insuficiente");
     }
+
+    @Test
+    void testTransferirDineroCuentas() {
+        Cuenta origen = new Cuenta("angel", new BigDecimal("1000"));
+        Cuenta destino = new Cuenta("juan", new BigDecimal("2000"));
+        Banco banco = new Banco();
+        banco.setNombre("Santander");
+        banco.transferir(origen, destino, new BigDecimal(500));
+        assertEquals("500", origen.getCuenta().toPlainString());
+        assertEquals("2500", destino.getCuenta().toPlainString());
+    }
+
+
+    @Test
+    void testRelacionBancoCuenta() {
+        Cuenta origen = new Cuenta("angel", new BigDecimal("1000"));
+        Cuenta destino = new Cuenta("juan", new BigDecimal("2000"));
+
+        Banco banco = new Banco();
+        banco.setNombre("Santander");
+        banco.add(origen);
+        banco.add(destino);
+        origen.setBanco(banco);
+        destino.setBanco(banco);
+
+        assertEquals(2, banco.getCuentas().size());
+        assertEquals("Santander",origen.getBanco().getNombre());
+        assertEquals("Santander",destino.getBanco().getNombre());
+
+        /**
+         * El assertAll, recibe una lista para poder validar
+         * assertAll( ()-> {} , ()-> {}, ()-> {});
+         * */
+
+    }
+
+    @Test
+    void testRelacionBancoCuentaAssertAll() {
+        Cuenta origen = new Cuenta("angel", new BigDecimal("1000"));
+        Cuenta destino = new Cuenta("juan", new BigDecimal("2000"));
+
+        Banco banco = new Banco();
+        banco.setNombre("Santander");
+        banco.add(origen);
+        banco.add(destino);
+        origen.setBanco(banco);
+        destino.setBanco(banco);
+
+        assertAll( () -> {assertEquals(2, banco.getCuentas().size());},
+                () -> {assertEquals("Santander",origen.getBanco().getNombre());},
+                () -> { assertEquals("Santander",destino.getBanco().getNombre());});
+
+    }
 }
